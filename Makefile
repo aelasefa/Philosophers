@@ -13,7 +13,7 @@ $(NAME) : $(OBJS)
 	$(CC) $(CFLAGS) $(SRCS) -o $(NAME)
 
 clean :
-	rm -f $(PHILO_DIR)/$(OBJS)
+	rm -f $(OBJS)
 
 fclean : clean
 	rm -f $(NAME)
