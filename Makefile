@@ -3,7 +3,7 @@ NAME := philos
 SRCS := philo/philo.c philo/philo_utils.c
 
 OBJS := $(SRCS:.c=.o)
-
+PHILO_DIR = philo
 CC = cc 
 CFLAGS = -Wall -Wextra -Werror
 
@@ -13,7 +13,7 @@ $(NAME) : $(OBJS)
 	$(CC) $(CFLAGS) $(SRCS) -o $(NAME)
 
 clean :
-	rm -f $(OBJS)
+	rm -f $(PHILO_DIR)/$(OBJS)
 
 fclean : clean
 	rm -f $(NAME)
