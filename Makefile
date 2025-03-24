@@ -1,6 +1,6 @@
-NAME := philo
+NAME := philos
 
-SRCS := philosophers.c
+SRCS := philo/philo.c philo/philo_utils.c
 
 OBJS := $(SRCS:.c=.o)
 
