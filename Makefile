@@ -1,6 +1,7 @@
 NAME := philos
 
-SRCS := philo/philo.c philo/philo_utils.c
+SRCS := philo/philo.c philo/philo_utils.c philo/init.c \
+		philo/parse.c philo/philo_routine.c 
 
 OBJS := $(SRCS:.c=.o)
 PHILO_DIR = philo
