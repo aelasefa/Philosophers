@@ -1,11 +1,11 @@
 NAME := philos
 
 SRCS := philo/philo.c philo/philo_utils.c philo/init.c \
-		philo/parse.c philo/philo_routine.c 
+		philo/parse.c philo/philo_routine.c philo/monitor.c 
 
 OBJS := $(SRCS:.c=.o)
 PHILO_DIR = philo
-CC = cc 
+CC = cc -g3
 CFLAGS = -Wall -Wextra -Werror
 
 all : $(NAME)

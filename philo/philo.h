@@ -22,7 +22,6 @@ typedef struct s_input
 	pthread_mutex_t *forks;
 	pthread_mutex_t print_lock;
 	pthread_mutex_t death_lock;
-	int i;
 	struct s_philo *philos;
 }		t_input;
 
@@ -44,12 +43,14 @@ long	get_time(void);
 void	free_input(t_input *input);
 //philo_routine.c
 void	*philo_routine(void *args);
+void	*routine(void *arg);
 //parse.c
 int	parse_input(int ac, char **av, t_input *args);
 //init.c
 int	init_mutexes(t_input *input);
 int	init_philosophers(t_input *input);
 
+void	*death_monitor(void *arg);
 
 int	start_simulation(t_input *input);
 
