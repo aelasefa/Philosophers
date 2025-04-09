@@ -1,24 +1,14 @@
-NAME := philos
+.PHONY: all clean fclean re
 
-SRCS := philo/philo.c philo/philo_utils.c philo/init.c \
-		philo/parse.c philo/philo_routine.c philo/monitor.c 
+all:
+	$(MAKE) -C philo
+	mv philo/philo ../
 
-OBJS := $(SRCS:.c=.o)
-PHILO_DIR = philo
-CC = cc
-CFLAGS = -Wall -Wextra -Werror
+clean:
+	$(MAKE) -C philo clean
 
-all : $(NAME)
+fclean:
+	$(MAKE) -C philo fclean
 
-$(NAME) : $(OBJS)
-	$(CC) $(CFLAGS) $(SRCS) -o $(NAME)
-
-clean :
-	rm -f $(OBJS)
-
-fclean : clean
-	rm -f $(NAME)
-
-re : fclean all
-
-.PHONY 	: clean
+re:
+	$(MAKE) -C philo re
