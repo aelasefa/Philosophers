@@ -1,126 +1,111 @@
-# Philosophers Project (42 School)
 
-## Table of Contents
-- [Introduction](#introduction)
-- [Understanding the Problem](#understanding-the-problem)
-- [Mandatory Rules](#mandatory-rules)
-- [Setup & Environment](#setup--environment)
-- [Project Structure](#project-structure)
-- [Implementation Steps](#implementation-steps)
-- [Testing & Debugging](#testing--debugging)
-- [Optimization Tips](#optimization-tips)
-- [Common Errors & Fixes](#common-errors--fixes)
-- [Resources](#resources)
+# 🧠 Philosophers - 42 Project
+
+## 📌 Project Description
+
+The **Dining Philosophers** problem is a classic concurrency exercise. The goal is to create a simulation where multiple philosophers sit at a table, alternating between **thinking**, **eating**, and **sleeping**, without causing deadlocks or starvation.
+
+This project uses **POSIX threads (pthreads)** and **mutexes** to handle synchronization.
 
 ---
 
-## Introduction
-The **Philosophers** project is part of the 42 curriculum and aims to deepen your understanding of multi-threading, concurrency, and synchronization using mutexes.
+## 🧩 Program Arguments
 
-## Understanding the Problem
-You need to simulate the famous **Dining Philosophers Problem**, where multiple philosophers sit around a table, sharing forks. The goal is to prevent deadlocks and race conditions while ensuring all philosophers eat.
-
-### Key Concepts:
-- **Threads:** Each philosopher is a thread.
-- **Mutexes:** Used to manage access to shared resources (forks).
-- **Race Conditions:** Occur when multiple threads access shared data simultaneously.
-- **Deadlocks:** When philosophers hold one fork and wait indefinitely for another.
-- **Starvation:** When a philosopher never gets to eat due to scheduling issues.
-
-## Mandatory Rules
-- You must use **only one thread per philosopher**.
-- A philosopher takes two forks to eat.
-- Philosophers think, eat, and sleep in a cycle.
-- Program must avoid **race conditions**, **deadlocks**, and **starvation**.
-
-## Setup & Environment
-### Requirements
-- Language: **C**
-- Compiler: **gcc**
-- Tools: **pthread library**
-
-### Compilation Command
-```sh
-cc -Wall -Wextra -Werror -pthread -o philo philo.c
+```bash
+./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]
 ```
 
-## Project Structure
+- `number_of_philosophers`: Number of philosophers (and forks)
+- `time_to_die`: Time (ms) a philosopher can live without eating
+- `time_to_eat`: Time (ms) a philosopher takes to eat
+- `time_to_sleep`: Time (ms) a philosopher takes to sleep
+- `number_of_times_each_philosopher_must_eat` (optional): End the simulation once all philosophers have eaten at least this many times
+
+---
+
+## 📁 File Structure
+
+- **main.c** — Parses arguments, initializes data, starts threads.
+- **init.c** — Initializes mutexes and philosopher structures.
+- **philo.c** — Thread routine: philosopher actions (think, eat, sleep).
+- **monitor.c** — Background thread that checks if a philosopher dies.
+- **utils.c** — Time and helper functions.
+- **philo.h** — All shared structures and function declarations.
+
+---
+
+## 🔧 Key Structs
+
+### `t_input`
+
+Shared data between all philosophers:
+```c
+typedef struct s_input {
+    int nbr_philo;
+    int die_time;
+    int eat_time;
+    int sleep_time;
+    int count_eat;
+    int is_dead;
+    long long start_time;
+    pthread_mutex_t *forks;
+    pthread_mutex_t print_lock;
+    pthread_mutex_t death_lock;
+    struct s_philo *philos;
+} t_input;
 ```
-philosophers/
-│── Makefile
-│── philo.c
-│── philo.h
-│── utils.c
-│── utils.h
-│── threads.c
-│── simulation.c
-│── mutex.c
-└── README.md
+
+### `t_philo`
+
+Individual philosopher data:
+```c
+typedef struct s_philo {
+    int id;
+    int meals_eaten;
+    long long last_meal_time;
+    pthread_t thread;
+    pthread_mutex_t *l_fork;
+    pthread_mutex_t *r_fork;
+    t_input *input;
+} t_philo;
 ```
 
-## Implementation Steps
-### 1. Parse Input Arguments
-- Number of philosophers
-- Time to die
-- Time to eat
-- Time to sleep
-- (Optional) Number of times each philosopher must eat
+---
 
-### 2. Initialize Structures
-- Create a `t_philosopher` structure containing:
-  - ID
-  - Left and right forks (mutexes)
-  - Last meal timestamp
-  - Number of meals eaten
-  - Thread reference
-- Create a `t_data` structure for shared data.
+## 💡 Logic Summary
 
-### 3. Create Threads
-- Use `pthread_create` to launch each philosopher as a separate thread.
+1. Initialize input data and mutexes.
+2. Create a thread for each philosopher.
+3. Philosophers follow this routine:
+   - Think
+   - Take forks
+   - Eat
+   - Release forks
+   - Sleep
+4. A monitor thread checks for dead philosophers.
+5. Exit simulation on death or when all have eaten (optional case).
 
-### 4. Implement the Simulation Logic
-- **Thinking:** Wait for forks to be available.
-- **Eating:** Lock forks, update meal count, unlock forks.
-- **Sleeping:** Wait for the specified sleep time.
+---
 
-### 5. Manage Synchronization
-- Use `pthread_mutex_lock` and `pthread_mutex_unlock` to handle fork access.
-- Implement a **monitoring thread** to check if a philosopher has died.
+## ✅ Bonus Tips
 
-### 6. Handle Exit Conditions
-- Stop simulation if a philosopher dies.
-- If a maximum meal count is set, terminate once all philosophers have eaten enough times.
+- Use `gettimeofday` or `clock_gettime` for timing.
+- Use `usleep` to prevent busy waiting.
+- Protect shared data with mutexes (`is_dead`, `printf`, etc.)
 
-## Testing & Debugging
-### Basic Tests
-```sh
+---
+
+## 🧪 Example Usage
+
+```bash
 ./philo 5 800 200 200
-./philo 4 410 200 200
 ```
 
-### Debugging Tools
-- **gdb**: Debug segmentation faults.
-- **valgrind**: Detect memory leaks.
-- **printf**: Print thread status.
-
-## Optimization Tips
-- **Avoid busy-waiting:** Use `usleep()` for better CPU performance.
-- **Minimize locking:** Only lock when necessary.
-- **Reduce contention:** Assign each philosopher a unique fork order.
-
-## Common Errors & Fixes
-| Error | Cause | Fix |
-|-------|-------|-----|
-| Deadlock | All philosophers grab one fork | Use an odd-even approach |
-| Race condition | Multiple threads modify shared data | Use mutexes |
-| Starvation | Some philosophers eat less frequently | Implement fairness checks |
-
-## Resources
-- [Dining Philosophers Wiki](https://en.wikipedia.org/wiki/Dining_philosophers_problem)
-- [42 Docs](https://42docs.com/en/)
-- [Pthread Library](https://man7.org/linux/man-pages/man7/pthreads.7.html)
+Simulates 5 philosophers with:
+- 800ms to live without eating
+- 200ms to eat
+- 200ms to sleep
 
 ---
-Good luck! 🚀
 
-
+Happy threading! 🚀
