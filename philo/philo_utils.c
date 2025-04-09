@@ -33,8 +33,8 @@ void	free_input(t_input *input)
 {
 	int	i;
 
-	if (input->forks)
-		free(input->forks);
+	if (input->philos)
+		free(input->philos);
 	if (input->forks)
 	{
 		i = 0;
