@@ -6,7 +6,7 @@
 /*   By: ayelasef <ayelasef@1337.ma>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 18:05:48 by ayelasef          #+#    #+#             */
-/*   Updated: 2025/04/09 11:52:11 by ayelasef         ###   ########.fr       */
+/*   Updated: 2025/04/09 12:18:28 by ayelasef         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 void	philo_log(t_philo *philo, char *msg)
 {
-	long long	timestamp;
+	long long	time;
 
 	pthread_mutex_lock(&philo->input->print_lock);
-	timestamp = get_time() - philo->input->start_time;
+	time = get_time() - philo->input->start_time;
 	if (!philo->input->is_dead)
-		printf("%lld %d %s\n", timestamp, philo->id, msg);
+		printf("%lld %d %s\n", time, philo->id, msg);
 	pthread_mutex_unlock(&philo->input->print_lock);
 }
 
@@ -44,17 +44,17 @@ void	philo_routine_help(t_philo *philo)
 
 void	*routine(void *arg)
 {
-	t_philo *philo = (t_philo *)arg;
+	t_philo	*philo;
 
+	philo = (t_philo *)arg;
 	if (philo->id % 2 == 0)
 		usleep(100);
 	while (!philo->input->is_dead)
 	{
 		philo_routine_help(philo);
-
-		if (philo->input->count_eat > 0 &&
-			philo->meals_eaten >= philo->input->count_eat)
-			break;
+		if (philo->input->count_eat > 0
+			&& philo->meals_eaten >= philo->input->count_eat)
+			break ;
 	}
 	return (NULL);
 }

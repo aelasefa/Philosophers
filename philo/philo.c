@@ -12,10 +12,10 @@
 
 #include "philo.h"
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
-	t_input	input;
-	int		i;
+	t_input		input;
+	int			i;
 	pthread_t	monitor;
 
 	if (!parse_input(ac, av, &input))
@@ -28,7 +28,8 @@ int main(int ac, char **av)
 	i = 0;
 	while (i < input.nbr_philo)
 	{
-		pthread_create(&input.philos[i].thread, NULL, &routine, &input.philos[i]);
+		pthread_create(&input.philos[i].thread, NULL, &routine,
+			&input.philos[i]);
 		i++;
 	}
 	pthread_create(&monitor, NULL, &death_monitor, &input);
