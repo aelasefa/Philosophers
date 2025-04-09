@@ -6,7 +6,7 @@
 /*   By: ayelasef <ayelasef@1337.ma>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 16:22:12 by ayelasef          #+#    #+#             */
-/*   Updated: 2025/04/09 12:01:46 by ayelasef         ###   ########.fr       */
+/*   Updated: 2025/04/09 12:14:24 by ayelasef         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int main(int ac, char **av)
 		return (1);
 	if (init_mutexes(&input) || init_philosophers(&input))
 	{
-		printf("Exit\n");
+		printf("Error : init failed\n");
 		return (1);
 	}
 	i = 0;
