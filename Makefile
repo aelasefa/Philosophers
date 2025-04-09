@@ -5,7 +5,7 @@ SRCS := philo/philo.c philo/philo_utils.c philo/init.c \
 
 OBJS := $(SRCS:.c=.o)
 PHILO_DIR = philo
-CC = cc -g3
+CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
 all : $(NAME)
