@@ -12,49 +12,62 @@
 
 #include "philo.h"
 
-void	philo_log(t_philo *philo, char *msg)
+void	print_action(t_philo *philo, const char *action)
 {
-	long long	time;
-
 	pthread_mutex_lock(&philo->input->print_lock);
-	time = get_time() - philo->input->start_time;
-	if (!philo->input->is_dead)
-		printf("%lld %d %s\n", time, philo->id, msg);
+	if (!check_simulation_end(philo->input))
+		printf("%lld %d %s\n",
+			get_time() - philo->input->start_time,
+			philo->id, action);
 	pthread_mutex_unlock(&philo->input->print_lock);
 }
 
-void	philo_routine_help(t_philo *philo)
+void	take_forks(t_philo *philo)
 {
-	pthread_mutex_lock(philo->l_fork);
-	philo_log(philo, "has taken a fork");
-	pthread_mutex_lock(philo->r_fork);
-	philo_log(philo, "has taken a fork");
-	pthread_mutex_lock(&philo->input->death_lock);
-	philo->last_meal_time = get_time();
-	pthread_mutex_unlock(&philo->input->death_lock);
-	philo_log(philo, "is eating");
-	usleep(philo->input->eat_time * 1000);
-	philo->meals_eaten++;
-	pthread_mutex_unlock(philo->r_fork);
-	pthread_mutex_unlock(philo->l_fork);
-	philo_log(philo, "is sleeping");
-	usleep(philo->input->sleep_time * 1000);
-	philo_log(philo, "is thinking");
+	if (philo->id % 2 != 0)
+	{
+		pthread_mutex_lock(philo->l_fork);
+		print_action(philo, "has taken a fork");
+	}
+	else
+	{
+		pthread_mutex_lock(philo->r_fork);
+		print_action(philo, "has taken a fork");
+	}
 }
 
-void	*routine(void *arg)
+void	release_forks(t_philo *philo)
+{
+	pthread_mutex_unlock(philo->r_fork);
+	pthread_mutex_unlock(philo->l_fork);
+}
+
+void	eat(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->input->death_lock);
+	philo->last_meal_time = get_time();
+	philo->meals_eaten++;
+	pthread_mutex_unlock(&philo->input->death_lock);
+	print_action(philo, "is eating");
+	usleep(philo->input->eat_time * 1000);
+}
+
+void	*philo_routine(void *arg)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
 	if (philo->id % 2 == 0)
-		usleep(100);
-	while (!philo->input->is_dead)
+		usleep(200);
+
+	while (!check_simulation_end(philo->input))
 	{
-		philo_routine_help(philo);
-		if (philo->input->count_eat > 0
-			&& philo->meals_eaten >= philo->input->count_eat)
-			break ;
+		take_forks(philo);
+		eat(philo);
+		release_forks(philo);
+		print_action(philo, "is sleeping");
+		usleep(philo->input->sleep_time * 1000);
+		print_action(philo, "is thinking");
 	}
 	return (NULL);
 }
