@@ -28,7 +28,7 @@ int	main(int ac, char **av)
 	i = 0;
 	while (i < input.nbr_philo)
 	{
-		pthread_create(&input.philos[i].thread, NULL, &routine,
+		pthread_create(&input.philos[i].thread, NULL, &philo_routine,
 			&input.philos[i]);
 		i++;
 	}
