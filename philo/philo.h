@@ -47,24 +47,24 @@ typedef struct s_philo
 	int				meals_eaten;
 	t_input			*input;
 }					t_philo;
-// philo.c
-int					parse_input(int ac, char **av, t_input *args);
 // philo_utils.c
 int					ft_atoi(char *str);
 long				get_time(void);
 void				free_input(t_input *input);
 // philo_routine.c
-void				*philo_routine(void *args);
-void				*routine(void *arg);
+void	*philo_routine(void *arg);
+void	eat(t_philo *philo);
+void	release_forks(t_philo *philo);
+void	take_forks(t_philo *philo);
+void	print_action(t_philo *philo, const char *action);
 // parse.c
 int					parse_input(int ac, char **av, t_input *args);
 // init.c
 int					init_mutexes(t_input *input);
 int					init_philosophers(t_input *input);
-
+//monitor.c
+int	is_terminated(t_philo *philo);
 void				*death_monitor(void *arg);
-
+int	check_simulation_end(t_input *input);
 int					start_simulation(t_input *input);
-
-int					join_threads(t_input *input);
 #endif
