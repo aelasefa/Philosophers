@@ -28,18 +28,22 @@ void	take_forks(t_philo *philo)
 	{
 		pthread_mutex_lock(philo->l_fork);
 		print_action(philo, "has taken a fork");
+		pthread_mutex_lock(philo->r_fork);
+		print_action(philo, "has taken a fork");
 	}
-	else
+	else 
 	{
 		pthread_mutex_lock(philo->r_fork);
+		print_action(philo, "has taken a fork");
+		pthread_mutex_lock(philo->l_fork);
 		print_action(philo, "has taken a fork");
 	}
 }
 
 void	release_forks(t_philo *philo)
 {
-	pthread_mutex_unlock(philo->r_fork);
-	pthread_mutex_unlock(philo->l_fork);
+		pthread_mutex_unlock(philo->r_fork);
+		pthread_mutex_unlock(philo->l_fork);
 }
 
 void	eat(t_philo *philo)
