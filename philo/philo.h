@@ -34,6 +34,8 @@ typedef struct s_input
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	death_lock;
+	pthread_mutex_t last_meal_time_lock;
+	pthread_mutex_t	meals_eaten_lock;
 	struct s_philo	*philos;
 }					t_input;
 
@@ -56,7 +58,7 @@ void	*philo_routine(void *arg);
 void	eat(t_philo *philo);
 void	release_forks(t_philo *philo);
 void	take_forks(t_philo *philo);
-void	print_action(t_philo *philo, const char *action);
+void	print_action(t_philo *philo, char *action);
 // parse.c
 int					parse_input(int ac, char **av, t_input *args);
 // init.c
