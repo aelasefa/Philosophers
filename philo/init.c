@@ -30,6 +30,10 @@ int	init_mutexes(t_input *input)
 		return (1);
 	if (pthread_mutex_init(&input->death_lock, NULL))
 		return (1);
+	if (pthread_mutex_init(&input->meals_eaten_lock, NULL))
+		return (1);
+	if (pthread_mutex_init(&input->last_meal_time_lock, NULL))
+		return (1);
 	return (0);
 }
 
