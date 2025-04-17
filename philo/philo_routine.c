@@ -12,14 +12,16 @@
 
 #include "philo.h"
 
-void	print_action(t_philo *philo, const char *action)
+void	print_action(t_philo *philo, char *action)
 {
-	pthread_mutex_lock(&philo->input->print_lock);
 	if (!check_simulation_end(philo->input))
+	{
+		pthread_mutex_lock(&philo->input->print_lock);
 		printf("%lld %d %s\n",
 			get_time() - philo->input->start_time,
 			philo->id, action);
-	pthread_mutex_unlock(&philo->input->print_lock);
+		pthread_mutex_unlock(&philo->input->print_lock);
+	}
 }
 
 void	take_forks(t_philo *philo)
@@ -42,16 +44,26 @@ void	take_forks(t_philo *philo)
 
 void	release_forks(t_philo *philo)
 {
+	if (philo->id % 2 != 0)
+	{
 		pthread_mutex_unlock(philo->r_fork);
 		pthread_mutex_unlock(philo->l_fork);
+	}
+	else 
+	{
+		pthread_mutex_unlock(philo->l_fork);
+		pthread_mutex_unlock(philo->r_fork);
+	}
 }
 
 void	eat(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->input->death_lock);
+	pthread_mutex_lock(&philo->input->last_meal_time_lock);
 	philo->last_meal_time = get_time();
+	pthread_mutex_lock(&philo->input->meals_eaten_lock);
 	philo->meals_eaten++;
-	pthread_mutex_unlock(&philo->input->death_lock);
+	pthread_mutex_unlock(&philo->input->meals_eaten_lock);
+	pthread_mutex_unlock(&philo->input->last_meal_time_lock);
 	print_action(philo, "is eating");
 	usleep(philo->input->eat_time * 1000);
 }
@@ -63,7 +75,6 @@ void	*philo_routine(void *arg)
 	philo = (t_philo *)arg;
 	if (philo->id % 2 == 0)
 		usleep(200);
-
 	while (!check_simulation_end(philo->input))
 	{
 		take_forks(philo);
@@ -72,6 +83,7 @@ void	*philo_routine(void *arg)
 		print_action(philo, "is sleeping");
 		usleep(philo->input->sleep_time * 1000);
 		print_action(philo, "is thinking");
+		usleep(100);
 	}
 	return (NULL);
 }
