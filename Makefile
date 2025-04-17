@@ -2,7 +2,6 @@
 
 all:
 	$(MAKE) -C philo
-	mv philo/philo ../
 
 clean:
 	$(MAKE) -C philo clean
