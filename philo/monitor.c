@@ -14,9 +14,13 @@
 
 int	is_terminated(t_philo *philo)
 {
+	int	done;
 	if (philo->input->count_eat == -1)
 		return (0);
-	return (philo->meals_eaten >= philo->input->count_eat);
+	pthread_mutex_lock(&philo->input->meals_eaten_lock);
+	done  =  (philo->meals_eaten >= philo->input->count_eat);
+	pthread_mutex_unlock(&philo->input->meals_eaten_lock);
+	return (done);
 }
 
 int	check_simulation_end(t_input *input)
@@ -31,21 +35,25 @@ int	check_simulation_end(t_input *input)
 
 static int	check_philosopher_death(t_input *input, int i)
 {
-	long long	time_since_meal;
-
-	pthread_mutex_lock(&input->death_lock);
-	time_since_meal = get_time() - input->philos[i].last_meal_time;
-	if (time_since_meal > input->die_time)
+	long long time;
+	pthread_mutex_lock(&input->last_meal_time_lock);
+	time = (get_time() - input->philos[i].last_meal_time);  
+	pthread_mutex_unlock(&input->last_meal_time_lock);
+	if (time > input->die_time)
 	{
-		pthread_mutex_lock(&input->print_lock);
-		printf("%lld %d died\n", get_time() - input->start_time,
-			input->philos[i].id);
+		if (!check_simulation_end(input))
+		{
+			pthread_mutex_lock(&input->print_lock);
+			printf("%lld %d died\n", get_time() - input->start_time,
+				input->philos[i].id);
+			pthread_mutex_unlock(&input->print_lock);
+			return (1);
+		}
+		pthread_mutex_lock(&input->death_lock);
 		input->is_dead = 1;
-		pthread_mutex_unlock(&input->print_lock);
 		pthread_mutex_unlock(&input->death_lock);
 		return (1);
 	}
-	pthread_mutex_unlock(&input->death_lock);
 	return (0);
 }
 
