@@ -1,11 +1,12 @@
 NAME := philo
 
 SRCS := philo.c philo_utils.c init.c \
-		parse.c philo_routine.c monitor.c 
+		parse.c philo_routine.c  monitor.c \
+		lock_forks.c actions.c
 
 OBJS := $(SRCS:.c=.o)
 CC = cc -g3
-CFLAGS = -Wall -Wextra -Werror -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror #-fsanitize=thread
 all : $(NAME)
 
 $(NAME) : $(OBJS)
