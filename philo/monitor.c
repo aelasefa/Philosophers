@@ -5,85 +5,50 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ayelasef <ayelasef@1337.ma>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/09 10:33:41 by ayelasef          #+#    #+#             */
-/*   Updated: 2025/04/09 13:51:36 by ayelasef         ###   ########.fr       */
+/*   Created: 2025/04/19 00:27:02 by ayelasef          #+#    #+#             */
+/*   Updated: 2025/04/19 18:47:11 by ayelasef         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	is_terminated(t_philo *philo)
+static int philos_running(t_input *input)
 {
-	int	done;
-	if (philo->input->count_eat == -1)
-		return (0);
-	pthread_mutex_lock(&philo->input->meals_eaten_lock);
-	done  =  (philo->meals_eaten >= philo->input->count_eat);
-	pthread_mutex_unlock(&philo->input->meals_eaten_lock);
-	return (done);
-}
+	int i;
+	int philos_done;
 
-int	check_simulation_end(t_input *input)
-{
-	int	ended;
-
-	pthread_mutex_lock(&input->death_lock);
-	ended = input->is_dead;
-	pthread_mutex_unlock(&input->death_lock);
-	return (ended);
-}
-
-static int	check_philosopher_death(t_input *input, int i)
-{
-	long long time;
-	pthread_mutex_lock(&input->last_meal_time_lock);
-	time = (get_time() - input->philos[i].last_meal_time);  
-	pthread_mutex_unlock(&input->last_meal_time_lock);
-	if (time > input->die_time)
+	philos_done = 0;
+	i = 0;
+	while (i < input->nbr_philo)
 	{
-		if (!check_simulation_end(input))
-		{
-			pthread_mutex_lock(&input->print_lock);
-			printf("%lld %d died\n", get_time() - input->start_time,
-				input->philos[i].id);
-			pthread_mutex_unlock(&input->print_lock);
-			return (1);
-		}
-		pthread_mutex_lock(&input->death_lock);
-		input->is_dead = 1;
-		pthread_mutex_unlock(&input->death_lock);
-		return (1);
-	}
-	return (0);
-}
-
-void	*death_monitor(void *arg)
-{
-	t_input	*input;
-	int		i;
-	int		full_philos;
-
-	input = (t_input *)arg;
-	while (!check_simulation_end(input))
-	{
-		i = 0;
-		full_philos = 0;
-		while (i < input->nbr_philo)
-		{
-			if (check_philosopher_death(input, i))
-				return (NULL);
-			if (is_terminated(&input->philos[i]))
-				full_philos++;
-			i++;
-		}
-		if (input->count_eat != -1 && full_philos == input->nbr_philo)
+		if (is_terminated(&input->philos[i]))
+			philos_done++;
+		else if (philo_died(&input->philos[i]))
 		{
 			pthread_mutex_lock(&input->death_lock);
 			input->is_dead = 1;
 			pthread_mutex_unlock(&input->death_lock);
-			return (NULL);
+			pthread_mutex_lock(&input->print_lock);
+			printf("%lld %d died\n", get_time() - input->start_time,
+				input->philos[i].id);
+			pthread_mutex_unlock(&input->print_lock);
+			return (0);
 		}
-		usleep(1000);
+		i++;
 	}
+	return (philos_done != input->nbr_philo);
+}
+
+void	*death_monitor(void *arg)
+{
+	t_input *input;
+
+	input = (t_input *)arg;
+	while (get_time() < input->start_time)
+		usleep(250);
+	usleep(input->die_time * 1000);
+	while (philos_running(input))
+		usleep(500);
 	return (NULL);
 }
+
