@@ -25,6 +25,11 @@ int	main(int ac, char **av)
 		printf("Error : init failed\n");
 		return (1);
 	}
+	if (input.nbr_philo == 1)
+	{
+		handle_one_philosopher(input.philos);
+		return (0);
+	}
 	i = 0;
 	while (i < input.nbr_philo)
 	{
