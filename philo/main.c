@@ -6,7 +6,7 @@
 /*   By: ayelasef <ayelasef@1337.ma>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 03:05:11 by ayelasef          #+#    #+#             */
-/*   Updated: 2025/04/19 03:14:24 by ayelasef         ###   ########.fr       */
+/*   Updated: 2025/04/19 18:56:20 by ayelasef         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void join_philosophers(t_input *input, int nb_philos)
 void simulation_start(t_input *input)
 {
 	pthread_t monitor_tid;
-	input->start_time = get_time() + (input->nbr_philo * 10);
+	input->start_time = get_time();
 	if (pthread_create(&monitor_tid, NULL, death_monitor, input) != 0)
 	{
 		printf("[ERROR] Monitor thread creation failed\n");
