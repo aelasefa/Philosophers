@@ -6,7 +6,7 @@
 /*   By: ayelasef <ayelasef@1337.ma>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 12:22:09 by ayelasef          #+#    #+#             */
-/*   Updated: 2025/04/09 12:22:44 by ayelasef         ###   ########.fr       */
+/*   Updated: 2025/04/19 18:36:51 by ayelasef         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ void	free_input(t_input *input)
 	}
 	pthread_mutex_destroy(&input->print_lock);
 	pthread_mutex_destroy(&input->death_lock);
+	pthread_mutex_destroy(&input->meals_eaten_lock);
+	pthread_mutex_destroy(&input->last_meal_time_lock);
 }
 
 long	get_time(void)
@@ -64,4 +66,14 @@ long	get_time(void)
 
 	gettimeofday(&time, NULL);
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
+}
+
+int	check_simulation_end(t_input *input)
+{
+	int	ended;
+
+	pthread_mutex_lock(&input->death_lock);
+	ended = input->is_dead;
+	pthread_mutex_unlock(&input->death_lock);
+	return (ended);
 }
