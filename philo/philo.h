@@ -33,7 +33,7 @@ typedef struct s_input
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	death_lock;
-	pthread_mutex_t last_meal_time_lock;
+	pthread_mutex_t	last_meal_time_lock;
 	pthread_mutex_t	meals_eaten_lock;
 	struct s_philo	*philos;
 }					t_input;
@@ -52,30 +52,30 @@ typedef struct s_philo
 int					ft_atoi(char *str);
 long				get_time(void);
 void				free_input(t_input *input);
-int	check_simulation_end(t_input *input);
+int					check_simulation_end(t_input *input);
 // philo_routine.c
-void	*philo_routine(void *arg);
-void	eat(t_philo *philo);
-void	print_action(t_philo *philo, char *action);
-void	handle_one_philosopher(t_philo *philo);
+void				*philo_routine(void *arg);
+void				eat(t_philo *philo);
+void				print_action(t_philo *philo, char *action);
+void				handle_one_philosopher(t_philo *philo);
 // parse.c
 int					parse_input(int ac, char **av, t_input *args);
 // init.c
 int					init_mutexes(t_input *input);
 int					init_philosophers(t_input *input);
-//monitor.c
-int	is_terminated(t_philo *philo);
+// monitor.c
+int					is_terminated(t_philo *philo);
 void				*death_monitor(void *arg);
 int					start_simulation(t_input *input);
-//routine.c
-int philo_sleep(t_philo *philo);
-int philo_eat(t_philo *philo);
-int philo_think(t_philo *philo);
-int check_philo_died(t_philo *philo);
-//lock_forks.c
-int	take_forks(t_philo *philo);
-void	release_forks(t_philo *philo);
-//actions.c
+// routine.c
+int					philo_sleep(t_philo *philo);
+int					philo_eat(t_philo *philo);
+int					philo_think(t_philo *philo);
+int					check_philo_died(t_philo *philo);
+// lock_forks.c
+int					take_forks(t_philo *philo);
+void				release_forks(t_philo *philo);
+// actions.c
 
-int	philo_died(t_philo *philo);
+int					philo_died(t_philo *philo);
 #endif

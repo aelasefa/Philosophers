@@ -12,16 +12,17 @@
 
 #include "philo.h"
 
-int start_philosophers(t_input *input)
+int	start_philosophers(t_input *input)
 {
 	t_philo	*philo;
-	int						i;
+	int		i;
 
 	i = 0;
 	while (i < input->nbr_philo)
 	{
 		philo = &input->philos[i];
-		if (pthread_create(&input->philos[i].thread, NULL, &philo_routine, philo ) != 0)
+		if (pthread_create(&input->philos[i].thread, NULL, &philo_routine,
+				philo) != 0)
 		{
 			printf("[ERROR] Philo %d failed to create thread\n", i + 1);
 			return (i);
@@ -31,9 +32,11 @@ int start_philosophers(t_input *input)
 	return (i);
 }
 
-void join_philosophers(t_input *input, int nb_philos)
+void	join_philosophers(t_input *input, int nb_philos)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (i < nb_philos)
 	{
 		pthread_join(input->philos[i].thread, NULL);
@@ -41,21 +44,23 @@ void join_philosophers(t_input *input, int nb_philos)
 	}
 }
 
-void simulation_start(t_input *input)
+void	simulation_start(t_input *input)
 {
-	pthread_t monitor_tid;
+	pthread_t	monitor_tid;
+	int			nb_started;
+
 	input->start_time = get_time();
 	if (pthread_create(&monitor_tid, NULL, death_monitor, input) != 0)
 	{
 		printf("[ERROR] Monitor thread creation failed\n");
 		return ;
 	}
-	int nb_started = start_philosophers(input);
+	nb_started = start_philosophers(input);
 	pthread_join(monitor_tid, NULL);
 	join_philosophers(input, nb_started);
 }
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
 	t_input	input;
 
@@ -66,4 +71,3 @@ int main(int ac, char **av)
 	free_input(&input);
 	return (0);
 }
-

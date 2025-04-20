@@ -12,10 +12,10 @@
 
 #include "philo.h"
 
-static int philos_running(t_input *input)
+static int	philos_running(t_input *input)
 {
-	int i;
-	int philos_done;
+	int	i;
+	int	philos_done;
 
 	philos_done = 0;
 	i = 0;
@@ -41,7 +41,7 @@ static int philos_running(t_input *input)
 
 void	*death_monitor(void *arg)
 {
-	t_input *input;
+	t_input	*input;
 
 	input = (t_input *)arg;
 	while (get_time() < input->start_time)
@@ -51,4 +51,3 @@ void	*death_monitor(void *arg)
 		usleep(500);
 	return (NULL);
 }
-

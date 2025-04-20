@@ -45,11 +45,13 @@ int	philo_eat(t_philo *philo)
 		release_forks(philo);
 		return (0);
 	}
+	pthread_mutex_lock(&philo->input->last_meal_time_lock);
 	philo->last_meal_time = get_time();
 	philo->meals_eaten++;
 	print_action(philo, "is eating");
 	usleep(philo->input->eat_time * 1000);
 	release_forks(philo);
+	pthread_mutex_unlock(&philo->input->last_meal_time_lock);
 	return (1);
 }
 
