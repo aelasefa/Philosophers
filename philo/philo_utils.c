@@ -51,13 +51,17 @@ void	free_input(t_input *input)
 	{
 		i = 0;
 		while (i < input->nbr_philo)
-			pthread_mutex_destroy(&input->forks[i++]);
+		{
+			pthread_mutex_destroy(&input->forks[i]);
+			pthread_mutex_destroy(&input->meal_locks[i]);
+			i++;
+		}
 		free(input->forks);
+		free(input->meal_locks);
 	}
 	pthread_mutex_destroy(&input->print_lock);
 	pthread_mutex_destroy(&input->death_lock);
 	pthread_mutex_destroy(&input->meals_eaten_lock);
-	pthread_mutex_destroy(&input->last_meal_time_lock);
 }
 
 long	get_time(void)
@@ -76,4 +80,12 @@ int	check_simulation_end(t_input *input)
 	ended = input->is_dead;
 	pthread_mutex_unlock(&input->death_lock);
 	return (ended);
+}
+void   ft_sleep (long long time)
+{
+    long long   start;
+	time /= 1000;
+    start = get_time();
+    while ((get_time() - start) < time)
+        usleep(100);
 }
