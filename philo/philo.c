@@ -25,18 +25,21 @@ int	main(int ac, char **av)
 		printf("Error : init failed\n");
 		return (1);
 	}
-	i = 0;
-	while (i < input.nbr_philo)
+	if (input.count_eat != 0)
 	{
-		pthread_create(&input.philos[i].thread, NULL, &philo_routine,
-			&input.philos[i]);
-		i++;
+		i = 0;
+		while (i < input.nbr_philo)
+		{
+			pthread_create(&input.philos[i].thread, NULL, &philo_routine,
+				  &input.philos[i]);
+			i++;
+		}
+		pthread_create(&monitor, NULL, &death_monitor, &input);
+		pthread_join(monitor, NULL);
+		i = 0;
+		while (i < input.nbr_philo)
+			pthread_join(input.philos[i++].thread, NULL);
 	}
-	pthread_create(&monitor, NULL, &death_monitor, &input);
-	pthread_join(monitor, NULL);
-	i = 0;
-	while (i < input.nbr_philo)
-		pthread_join(input.philos[i++].thread, NULL);
 	free_input(&input);
 	return (0);
 }
