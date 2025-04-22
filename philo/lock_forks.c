@@ -42,7 +42,7 @@ int	take_forks(t_philo *philo)
 		return (0);
 	if (philo->input->nbr_philo == 1)
 	{
-		usleep(philo->input->die_time * 1000);
+		ft_sleep(philo->input->die_time * 1000);
 		return (0);
 	}
 	if (!lock_single_fork(philo, second))
