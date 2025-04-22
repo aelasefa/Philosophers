@@ -20,11 +20,8 @@ void	print_action(t_philo *philo, char *action)
 		pthread_mutex_unlock(&philo->input->print_lock);
 		return ;
 	}
-	if (!check_simulation_end(philo->input))
-	{
-		printf("%lld %d %s\n", get_time() - philo->input->start_time, philo->id,
+	printf("%lld %d %s\n", get_time() - philo->input->start_time, philo->id,
 			action);
-	}
 	pthread_mutex_unlock(&philo->input->print_lock);
 }
 
@@ -34,10 +31,7 @@ void	handle_one_philosopher(t_philo *philo)
 
 	start_time = get_time();
 	print_action(philo, "has taken a fork");
-	usleep(philo->input->die_time * 1000);
-	pthread_mutex_lock(&philo->input->print_lock);
-	printf("%ld %d died\n", get_time() - start_time, philo->id);
-	pthread_mutex_unlock(&philo->input->print_lock);
+	ft_sleep(philo->input->die_time * 1000);
 }
 
 void	*philo_routine(void *arg)
@@ -51,7 +45,7 @@ void	*philo_routine(void *arg)
 		return (NULL);
 	}
 	if (philo->id % 2 != 0)
-		usleep(40 * 1000);
+		ft_sleep(40 * 1000);
 	while (1)
 	{
 		if (!philo_eat(philo))
