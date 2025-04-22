@@ -18,9 +18,9 @@ int	philo_died(t_philo *philo)
 	int		dead;
 
 	time_to_die = philo->input->die_time;
-	pthread_mutex_lock(&philo->input->last_meal_time_lock);
+	pthread_mutex_lock(philo->meal_lock);
 	dead = (get_time() - philo->last_meal_time > time_to_die);
-	pthread_mutex_unlock(&philo->input->last_meal_time_lock);
+	pthread_mutex_unlock(philo->meal_lock);
 	return (dead);
 }
 
@@ -45,20 +45,20 @@ int	philo_eat(t_philo *philo)
 		release_forks(philo);
 		return (0);
 	}
-	pthread_mutex_lock(&philo->input->last_meal_time_lock);
+	pthread_mutex_lock(philo->meal_lock);
 	philo->last_meal_time = get_time();
 	philo->meals_eaten++;
+	pthread_mutex_unlock(philo->meal_lock);
 	print_action(philo, "is eating");
-	usleep(philo->input->eat_time * 1000);
+	ft_sleep(philo->input->eat_time * 1000);
 	release_forks(philo);
-	pthread_mutex_unlock(&philo->input->last_meal_time_lock);
 	return (1);
 }
 
 int	philo_sleep(t_philo *philo)
 {
 	print_action(philo, "is sleeping");
-	usleep(philo->input->sleep_time * 1000);
+	ft_sleep(philo->input->sleep_time * 1000);
 	return (1);
 }
 
@@ -80,9 +80,9 @@ int	philo_think(t_philo *philo)
 	time_to_sleep = input->sleep_time;
 	time_to_die = input->die_time;
 	if (time_to_sleep < time_to_eat)
-		usleep((time_to_eat - time_to_sleep) * 1000);
+		ft_sleep((time_to_eat - time_to_sleep) * 1000);
 	time_till_death = get_time() - philo->last_meal_time;
 	if (time_till_death < time_to_die * 0.7)
-		usleep(1000);
+		ft_sleep(1000);
 	return (1);
 }

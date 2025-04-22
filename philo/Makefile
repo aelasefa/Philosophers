@@ -6,7 +6,7 @@ SRCS := philo.c philo_utils.c init.c \
 
 OBJS := $(SRCS:.c=.o)
 CC = cc -g3
-CFLAGS = -Wall -Wextra -Werror -fsanitize=thread
+CFLAGS = -Wall -Wextra -Werror #-fsanitize=thread
 all : $(NAME)
 
 $(NAME) : $(OBJS)

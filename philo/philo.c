@@ -12,6 +12,19 @@
 
 #include "philo.h"
 
+void	creat_thread(t_input *input)
+{
+	int	i;
+
+	i = 0;
+	while (i < input->nbr_philo)
+	{
+		pthread_create(&input->philos[i].thread, NULL, &philo_routine,
+			&input->philos[i]);
+		i++;
+	}
+}
+
 int	main(int ac, char **av)
 {
 	t_input		input;
@@ -27,13 +40,7 @@ int	main(int ac, char **av)
 	}
 	if (input.count_eat != 0)
 	{
-		i = 0;
-		while (i < input.nbr_philo)
-		{
-			pthread_create(&input.philos[i].thread, NULL, &philo_routine,
-				  &input.philos[i]);
-			i++;
-		}
+		creat_thread(&input);
 		pthread_create(&monitor, NULL, &death_monitor, &input);
 		pthread_join(monitor, NULL);
 		i = 0;

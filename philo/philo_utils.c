@@ -81,11 +81,13 @@ int	check_simulation_end(t_input *input)
 	pthread_mutex_unlock(&input->death_lock);
 	return (ended);
 }
-void   ft_sleep (long long time)
+
+void	ft_sleep(long long time)
 {
-    long long   start;
+	long long	start;
+
 	time /= 1000;
-    start = get_time();
-    while ((get_time() - start) < time)
-        usleep(100);
+	start = get_time();
+	while ((get_time() - start) < time)
+		usleep(100);
 }

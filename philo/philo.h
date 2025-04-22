@@ -55,7 +55,7 @@ int					ft_atoi(char *str);
 long				get_time(void);
 void				free_input(t_input *input);
 int					check_simulation_end(t_input *input);
-void   ft_sleep (long long time);
+void				ft_sleep(long long time);
 // philo_routine.c
 void				*philo_routine(void *arg);
 void				eat(t_philo *philo);

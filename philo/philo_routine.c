@@ -21,7 +21,7 @@ void	print_action(t_philo *philo, char *action)
 		return ;
 	}
 	printf("%lld %d %s\n", get_time() - philo->input->start_time, philo->id,
-			action);
+		action);
 	pthread_mutex_unlock(&philo->input->print_lock);
 }
 
