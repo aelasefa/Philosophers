@@ -31,6 +31,7 @@ typedef struct s_input
 	long long		start_time;
 	int				is_dead;
 	pthread_mutex_t	*forks;
+	pthread_mutex_t	*meal_locks;
 	pthread_mutex_t	print_lock;
 	pthread_mutex_t	death_lock;
 	pthread_mutex_t	last_meal_time_lock;
@@ -44,6 +45,7 @@ typedef struct s_philo
 	pthread_t		thread;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
+	pthread_mutex_t	*meal_lock;
 	long long		last_meal_time;
 	int				meals_eaten;
 	t_input			*input;
@@ -53,6 +55,7 @@ int					ft_atoi(char *str);
 long				get_time(void);
 void				free_input(t_input *input);
 int					check_simulation_end(t_input *input);
+void   ft_sleep (long long time);
 // philo_routine.c
 void				*philo_routine(void *arg);
 void				eat(t_philo *philo);
