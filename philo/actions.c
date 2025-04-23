@@ -6,7 +6,7 @@
 /*   By: ayelasef <ayelasef@1337.ma>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:09:59 by ayelasef          #+#    #+#             */
-/*   Updated: 2025/04/19 18:45:46 by ayelasef         ###   ########.fr       */
+/*   Updated: 2025/04/23 10:06:16 by ayelasef         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	philo_eat(t_philo *philo)
 	philo->meals_eaten++;
 	pthread_mutex_unlock(philo->meal_lock);
 	print_action(philo, "is eating");
-	ft_sleep(philo->input->eat_time * 1000);
+	ft_sleep(philo->input->eat_time * 1000, philo);
 	release_forks(philo);
 	return (1);
 }
@@ -58,7 +58,7 @@ int	philo_eat(t_philo *philo)
 int	philo_sleep(t_philo *philo)
 {
 	print_action(philo, "is sleeping");
-	ft_sleep(philo->input->sleep_time * 1000);
+	ft_sleep(philo->input->sleep_time * 1000, philo);
 	return (1);
 }
 
@@ -80,9 +80,9 @@ int	philo_think(t_philo *philo)
 	time_to_sleep = input->sleep_time;
 	time_to_die = input->die_time;
 	if (time_to_sleep < time_to_eat)
-		ft_sleep((time_to_eat - time_to_sleep) * 1000);
+		ft_sleep((time_to_eat - time_to_sleep) * 1000, philo);
 	time_till_death = get_time() - philo->last_meal_time;
 	if (time_till_death < time_to_die * 0.7)
-		ft_sleep(1000);
+		ft_sleep(1000, philo);
 	return (1);
 }

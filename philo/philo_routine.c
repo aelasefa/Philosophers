@@ -6,7 +6,7 @@
 /*   By: ayelasef <ayelasef@1337.ma>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/07 18:05:48 by ayelasef          #+#    #+#             */
-/*   Updated: 2025/04/19 18:53:58 by ayelasef         ###   ########.fr       */
+/*   Updated: 2025/04/23 10:07:03 by ayelasef         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	handle_one_philosopher(t_philo *philo)
 
 	start_time = get_time();
 	print_action(philo, "has taken a fork");
-	ft_sleep(philo->input->die_time * 1000);
+	ft_sleep(philo->input->die_time * 1000, philo);
 }
 
 void	*philo_routine(void *arg)
@@ -45,7 +45,7 @@ void	*philo_routine(void *arg)
 		return (NULL);
 	}
 	if (philo->id % 2 != 0)
-		ft_sleep(40 * 1000);
+		ft_sleep(40 * 1000, philo);
 	while (1)
 	{
 		if (!philo_eat(philo))

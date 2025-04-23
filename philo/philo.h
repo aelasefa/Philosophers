@@ -23,11 +23,11 @@
 
 typedef struct s_input
 {
-	int				nbr_philo;
-	int				die_time;
-	int				eat_time;
-	int				sleep_time;
-	int				count_eat;
+	long				nbr_philo;
+	long				die_time;
+	long				eat_time;
+	long				sleep_time;
+	long				count_eat;
 	long long		start_time;
 	int				is_dead;
 	pthread_mutex_t	*forks;
@@ -55,7 +55,7 @@ int					ft_atoi(char *str);
 long				get_time(void);
 void				free_input(t_input *input);
 int					check_simulation_end(t_input *input);
-void				ft_sleep(long long time);
+void				ft_sleep(long long time, t_philo *philo);
 // philo_routine.c
 void				*philo_routine(void *arg);
 void				eat(t_philo *philo);

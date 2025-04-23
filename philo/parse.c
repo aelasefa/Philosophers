@@ -30,7 +30,7 @@ int	parse_input(int ac, char **av, t_input *args)
 	if (args->nbr_philo <= 0 || args->die_time <= 0 || args->eat_time <= 0
 		|| args->sleep_time <= 0 || (ac == 6 && args->count_eat < 0))
 	{
-		printf("Error: Arguments must be positive numbers\n");
+		printf("Error: Invalid arguments.\n");
 		return (0);
 	}
 	return (1);

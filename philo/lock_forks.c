@@ -6,7 +6,7 @@
 /*   By: ayelasef <ayelasef@1337.ma>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 17:06:06 by ayelasef          #+#    #+#             */
-/*   Updated: 2025/04/19 17:14:16 by ayelasef         ###   ########.fr       */
+/*   Updated: 2025/04/23 10:06:08 by ayelasef         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	take_forks(t_philo *philo)
 		return (0);
 	if (philo->input->nbr_philo == 1)
 	{
-		ft_sleep(philo->input->die_time * 1000);
+		ft_sleep(philo->input->die_time * 1000, philo);
 		return (0);
 	}
 	if (!lock_single_fork(philo, second))
