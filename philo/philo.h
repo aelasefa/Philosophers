@@ -42,6 +42,7 @@ typedef struct s_input
 typedef struct s_philo
 {
 	int				id;
+	int				check;
 	pthread_t		thread;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;

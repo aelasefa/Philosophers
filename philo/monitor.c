@@ -23,7 +23,7 @@ static int	philos_running(t_input *input)
 	{
 		if (is_terminated(&input->philos[i]))
 			philos_done++;
-		else if (philo_died(&input->philos[i]))
+		else if (!input->philos[i].check &&  philo_died(&input->philos[i]))
 		{
 			pthread_mutex_lock(&input->death_lock);
 			input->is_dead = 1;

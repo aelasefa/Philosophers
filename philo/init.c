@@ -55,10 +55,10 @@ int	init_philosophers(t_input *input)
 		input->philos[i].id = i + 1;
 		input->philos[i].l_fork = &input->forks[i];
 		input->philos[i].r_fork = &input->forks[(i + 1) % input->nbr_philo];
-		input->philos[i].last_meal_time = input->start_time;
 		input->philos[i].meals_eaten = 0;
 		input->philos[i].meal_lock = &input->meal_locks[i];
 		input->philos[i].input = input;
+		input->philos[i].check = 0;
 		i++;
 	}
 	return (0);

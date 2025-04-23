@@ -21,6 +21,7 @@ void	creat_thread(t_input *input)
 	{
 		pthread_create(&input->philos[i].thread, NULL, &philo_routine,
 			&input->philos[i]);
+		input->philos[i].last_meal_time = input->start_time;
 		i++;
 	}
 }
