@@ -23,11 +23,11 @@
 
 typedef struct s_input
 {
-	long				nbr_philo;
-	long				die_time;
-	long				eat_time;
-	long				sleep_time;
-	long				count_eat;
+	long			nbr_philo;
+	long			die_time;
+	long			eat_time;
+	long			sleep_time;
+	long			count_eat;
 	long long		start_time;
 	int				is_dead;
 	pthread_mutex_t	*forks;
