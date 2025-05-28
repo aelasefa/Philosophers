@@ -12,22 +12,28 @@
 
 #include "philo.h"
 
-int	init_mutexes(t_input *input)
+int init_mutexes(t_input *input)
 {
-	int	i;
+	int i;
 
 	input->forks = malloc(sizeof(pthread_mutex_t) * input->nbr_philo);
-	if (!input->forks)
-		return (1);
 	input->meal_locks = malloc(sizeof(pthread_mutex_t) * input->nbr_philo);
-	if (!input->meal_locks)
+	input->meals_eaten_locks = malloc(sizeof(pthread_mutex_t) * input->nbr_philo);
+	input->last_meal_time_locks = malloc(sizeof(pthread_mutex_t) * input->nbr_philo);
+
+	if (!input->forks || !input->meal_locks || !input->meals_eaten_locks || !input->last_meal_time_locks)
 		return (1);
+
 	i = 0;
 	while (i < input->nbr_philo)
 	{
+		if (pthread_mutex_init(&input->last_meal_time_locks[i], NULL))
+			return (1);
 		if (pthread_mutex_init(&input->forks[i], NULL))
 			return (1);
 		if (pthread_mutex_init(&input->meal_locks[i], NULL))
+			return (1);
+		if (pthread_mutex_init(&input->meals_eaten_locks[i], NULL))
 			return (1);
 		i++;
 	}
@@ -35,10 +41,10 @@ int	init_mutexes(t_input *input)
 		return (1);
 	if (pthread_mutex_init(&input->death_lock, NULL))
 		return (1);
-	if (pthread_mutex_init(&input->meals_eaten_lock, NULL))
-		return (1);
+
 	return (0);
 }
+
 
 int	init_philosophers(t_input *input)
 {
@@ -52,14 +58,18 @@ int	init_philosophers(t_input *input)
 	i = 0;
 	while (i < input->nbr_philo)
 	{
-		input->philos[i].id = i + 1;
-		input->philos[i].l_fork = &input->forks[i];
-		input->philos[i].r_fork = &input->forks[(i + 1) % input->nbr_philo];
-		input->philos[i].meals_eaten = 0;
-		input->philos[i].meal_lock = &input->meal_locks[i];
-		input->philos[i].input = input;
-		input->philos[i].check = 0;
+		t_philo *philo = &input->philos[i];
+		philo->id = i + 1;
+		philo->input = input;
+		philo->meals_eaten = 0;
+		philo->check = 0;
+		philo->last_meal_time = input->start_time;
+		philo->l_fork = &input->forks[i];
+		philo->r_fork = &input->forks[(i + 1) % input->nbr_philo];
+		input->philos[i].last_meal_time_lock = &input->last_meal_time_locks[i];
+		philo->meal_lock = &input->meal_locks[i];
 		i++;
 	}
 	return (0);
 }
+
