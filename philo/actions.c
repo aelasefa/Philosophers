@@ -32,7 +32,9 @@ int	is_terminated(t_philo *philo)
 	nb_iterations = philo->input->count_eat;
 	if (nb_iterations < 0)
 		return (0);
+    pthread_mutex_lock(philo->meal_lock);
 	done = (philo->meals_eaten >= nb_iterations);
+    pthread_mutex_unlock(philo->meal_lock);
 	return (done);
 }
 
