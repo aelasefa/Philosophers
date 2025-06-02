@@ -12,80 +12,67 @@
 
 #include "philo.h"
 
-static int	ft_isdigit(int c)
+int	ft_isdigit(int c)
 {
 	if (c >= 48 && c <= 57)
 		return (1);
 	return (0);
 }
 
-int	check_argument(char *av)
+static int	is_space(char c)
 {
-	int	i;
-
-	i = 1;
-	while (av[i])
-	{
-		if (!ft_isdigit(av[i]))
-			return (0);
-		i++;
-	}
-	return (1);
+	return (c == ' ' || (c >= 9 && c <= 13));
 }
 
-int	ft_atoi(char *str)
+static int	handle_sign(const char *str, int *i)
+{
+	int	sign;
+
+	sign = 1;
+	if (str[*i] == '+' || str[*i] == '-')
+	{
+		if (str[*i] == '-')
+			sign = -1;
+		(*i)++;
+	}
+	return (sign);
+}
+
+static int	is_overflow(long result, int sign, t_input *args)
+{
+	if ((result * sign) > 2147483647 || (result * sign) < -2147483648)
+	{
+		args->flag = 1;
+		return (1);
+	}
+	return (0);
+}
+
+int	ft_atoi(char *str, t_input *args)
 {
 	long	result;
+	int		sign;
+	int		i;
 
-	int (signe), i;
-	i = 0;
-	signe = 1;
 	result = 0;
-	while ((str[i] != '\0' && str[i] >= 9 && str[i] <= 13) || str[i] == 32)
+	i = 0;
+	args->flag = 0;
+	while (is_space(str[i]))
 		i++;
-	if (str[i] == '+' || str[i] == '-')
-	{
-		if (str[i] == '-')
-			signe *= -1;
-		i++;
-	}
-	if (!check_argument(str))
-		return (-1);
+	sign = handle_sign(str, &i);
+	if (!str[i])
+		return (args->flag = 1, -1);
 	while (str[i] >= '0' && str[i] <= '9')
 	{
-		if (result * signe > 2147483647 || result * signe < -2147483648)
+		result = result * 10 + (str[i] - '0');
+		if (is_overflow(result, sign, args))
 			return (-1);
-		result = result * 10 + str[i] - '0';
 		i++;
 	}
-	return (result);
-}
-
-void	free_input(t_input *input)
-{
-	int	i;
-
-	if (!input)
-		return ;
-	if (input->philos)
-		free(input->philos);
-	if (input->forks && input->meal_locks && input->meals_eaten_locks
-		&& input->last_meal_time_locks)
+	if (str[i] != '\0')
 	{
-		i = 0;
-		while (i < input->nbr_philo)
-		{
-			pthread_mutex_destroy(&input->forks[i]);
-			pthread_mutex_destroy(&input->meal_locks[i]);
-			pthread_mutex_destroy(&input->meals_eaten_locks[i]);
-			pthread_mutex_destroy(&input->last_meal_time_locks[i]);
-			i++;
-		}
-		free(input->forks);
-		free(input->meal_locks);
-		free(input->meals_eaten_locks);
-		free(input->last_meal_time_locks);
+		args->flag = 1;
+		return (-1);
 	}
-	pthread_mutex_destroy(&input->print_lock);
-	pthread_mutex_destroy(&input->death_lock);
+	return ((int)(result * sign));
 }

@@ -30,6 +30,7 @@ typedef struct s_input
 	long			count_eat;
 	long long		start_time;
 	int				is_dead;
+	int				flag;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	*meal_locks;
 	pthread_mutex_t	*meals_eaten_locks;
@@ -55,11 +56,12 @@ typedef struct s_philo
 }					t_philo;
 
 // philo_utils.c
-int					ft_atoi(char *str);
+int					ft_atoi(char *str, t_input *args);
 long				get_time(void);
 void				free_input(t_input *input);
 int					check_simulation_end(t_input *input);
 void				ft_sleep(long long time, t_philo *philo);
+int					ft_isdigit(int c);
 // philo_routine.c
 void				*philo_routine(void *arg);
 void				eat(t_philo *philo);

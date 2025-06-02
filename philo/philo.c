@@ -52,10 +52,7 @@ int	main(int ac, char **av)
 
 	memset(&input, 0, sizeof(t_input));
 	if (!parse_input(ac, av, &input))
-	{
-		printf("Error: Invalid input\n");
 		return (1);
-	}
 	if (init_mutexes(&input) || init_philosophers(&input))
 	{
 		printf("Error: Initialization failed\n");
