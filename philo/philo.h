@@ -30,21 +30,20 @@ typedef struct s_input
 	long			count_eat;
 	long long		start_time;
 	int				is_dead;
-
-	pthread_mutex_t	*forks;              // One mutex per fork
-	pthread_mutex_t	*meal_locks;         // One mutex per philosopher to protect meals_eaten & last_meal_time
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	*meal_locks;
 	pthread_mutex_t	*meals_eaten_locks;
-	pthread_mutex_t	print_lock;          // Protects console output
-	pthread_mutex_t	death_lock;          // Protects is_dead flag
+	pthread_mutex_t	print_lock;
+	pthread_mutex_t	death_lock;
 	pthread_mutex_t	*last_meal_time_locks;
-	struct s_philo	*philos;             // Array of philosophers
+	struct s_philo	*philos;
 }					t_input;
 
 typedef struct s_philo
 {
 	int				id;
 	pthread_t		thread;
-	int	check;
+	int				check;
 	pthread_mutex_t	*l_fork;
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*meal_lock;
@@ -52,7 +51,6 @@ typedef struct s_philo
 	pthread_mutex_t	*last_meal_time_lock;
 	long long		last_meal_time;
 	int				meals_eaten;
-
 	t_input			*input;
 }					t_philo;
 

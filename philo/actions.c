@@ -12,16 +12,16 @@
 
 #include "philo.h"
 
-int philo_died(t_philo *philo)
+int	philo_died(t_philo *philo)
 {
-	int dead;
-	long long now;
+	int			dead;
+	long long	now;
 
 	now = get_time();
 	pthread_mutex_lock(philo->last_meal_time_lock);
 	dead = (now - philo->last_meal_time > philo->input->die_time);
 	pthread_mutex_unlock(philo->last_meal_time_lock);
-	return dead;
+	return (dead);
 }
 
 int	is_terminated(t_philo *philo)
@@ -32,46 +32,46 @@ int	is_terminated(t_philo *philo)
 	nb_iterations = philo->input->count_eat;
 	if (nb_iterations < 0)
 		return (0);
-    pthread_mutex_lock(philo->meal_lock);
+	pthread_mutex_lock(philo->meal_lock);
 	done = (philo->meals_eaten >= nb_iterations);
-    pthread_mutex_unlock(philo->meal_lock);
+	pthread_mutex_unlock(philo->meal_lock);
 	return (done);
 }
 
-int philo_eat(t_philo *philo)
+int	philo_eat(t_philo *philo)
 {
-    if (!take_forks(philo))
-        return (0);
-    if (check_simulation_end(philo->input) || philo_died(philo))
-    {
-        release_forks(philo);
-        return (0);
-    }
-    print_action(philo, "is eating");
-    pthread_mutex_lock(philo->meal_lock);
-    philo->meals_eaten++;
-    pthread_mutex_unlock(philo->meal_lock);
-    ft_sleep(philo->input->eat_time * 1000, philo);
-    pthread_mutex_lock(philo->last_meal_time_lock);
-    philo->last_meal_time = get_time();
-    pthread_mutex_unlock(philo->last_meal_time_lock);
-    release_forks(philo);
-    return (1);
+	if (!take_forks(philo))
+		return (0);
+	if (check_simulation_end(philo->input) || philo_died(philo))
+	{
+		release_forks(philo);
+		return (0);
+	}
+	print_action(philo, "is eating");
+	pthread_mutex_lock(philo->meal_lock);
+	philo->meals_eaten++;
+	pthread_mutex_unlock(philo->meal_lock);
+	ft_sleep(philo->input->eat_time * 1000, philo);
+	pthread_mutex_lock(philo->last_meal_time_lock);
+	philo->last_meal_time = get_time();
+	pthread_mutex_unlock(philo->last_meal_time_lock);
+	release_forks(philo);
+	return (1);
 }
 
-int philo_sleep(t_philo *philo)
+int	philo_sleep(t_philo *philo)
 {
-    if (check_simulation_end(philo->input))
-        return (0);
-    print_action(philo, "is sleeping");
-    ft_sleep(philo->input->sleep_time * 1000, philo);
-    return (1);
+	if (check_simulation_end(philo->input))
+		return (0);
+	print_action(philo, "is sleeping");
+	ft_sleep(philo->input->sleep_time * 1000, philo);
+	return (1);
 }
 
-int philo_think(t_philo *philo)
+int	philo_think(t_philo *philo)
 {
-    if (check_simulation_end(philo->input) || philo_died(philo))
-        return 0;
-    print_action(philo, "is thinking");
-    return (1);
+	if (check_simulation_end(philo->input) || philo_died(philo))
+		return (0);
+	print_action(philo, "is thinking");
+	return (1);
 }

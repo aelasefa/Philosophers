@@ -38,28 +38,19 @@ int	take_forks(t_philo *philo)
 		first = philo->r_fork;
 		second = philo->l_fork;
 	}
-	else
-	{
-		first = philo->l_fork;
-		second = philo->r_fork;
-	}
-
 	if (!lock_single_fork(philo, first))
 		return (0);
-
 	if (philo->input->nbr_philo == 1)
 	{
 		ft_sleep(philo->input->die_time * 1000, philo);
 		pthread_mutex_unlock(first);
 		return (0);
 	}
-
 	if (!lock_single_fork(philo, second))
 	{
 		pthread_mutex_unlock(first);
 		return (0);
 	}
-
 	return (1);
 }
 

@@ -61,17 +61,16 @@ int	ft_atoi(char *str)
 	return (result);
 }
 
-void free_input(t_input *input)
+void	free_input(t_input *input)
 {
-	int i;
+	int	i;
 
 	if (!input)
-		return;
-
+		return ;
 	if (input->philos)
 		free(input->philos);
-
-	if (input->forks && input->meal_locks && input->meals_eaten_locks && input->last_meal_time_locks)
+	if (input->forks && input->meal_locks && input->meals_eaten_locks
+		&& input->last_meal_time_locks)
 	{
 		i = 0;
 		while (i < input->nbr_philo)
@@ -87,8 +86,6 @@ void free_input(t_input *input)
 		free(input->meals_eaten_locks);
 		free(input->last_meal_time_locks);
 	}
-
 	pthread_mutex_destroy(&input->print_lock);
 	pthread_mutex_destroy(&input->death_lock);
 }
-

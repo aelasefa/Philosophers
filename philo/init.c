@@ -12,43 +12,46 @@
 
 #include "philo.h"
 
-int init_mutexes(t_input *input)
+static int	allocate_mutexes(t_input *input)
 {
-	int i;
-
 	input->forks = malloc(sizeof(pthread_mutex_t) * input->nbr_philo);
 	input->meal_locks = malloc(sizeof(pthread_mutex_t) * input->nbr_philo);
-	input->meals_eaten_locks = malloc(sizeof(pthread_mutex_t) * input->nbr_philo);
-	input->last_meal_time_locks = malloc(sizeof(pthread_mutex_t) * input->nbr_philo);
-
-	if (!input->forks || !input->meal_locks || !input->meals_eaten_locks || !input->last_meal_time_locks)
+	input->meals_eaten_locks = malloc(sizeof(pthread_mutex_t)
+			* input->nbr_philo);
+	input->last_meal_time_locks = malloc(sizeof(pthread_mutex_t)
+			* input->nbr_philo);
+	if (!input->forks || !input->meal_locks
+		|| !input->meals_eaten_locks || !input->last_meal_time_locks)
 		return (1);
-
-	i = 0;
-	while (i < input->nbr_philo)
-	{
-		if (pthread_mutex_init(&input->last_meal_time_locks[i], NULL))
-			return (1);
-		if (pthread_mutex_init(&input->forks[i], NULL))
-			return (1);
-		if (pthread_mutex_init(&input->meal_locks[i], NULL))
-			return (1);
-		if (pthread_mutex_init(&input->meals_eaten_locks[i], NULL))
-			return (1);
-		i++;
-	}
-	if (pthread_mutex_init(&input->print_lock, NULL))
-		return (1);
-	if (pthread_mutex_init(&input->death_lock, NULL))
-		return (1);
-
 	return (0);
 }
 
+int	init_mutexes(t_input *input)
+{
+	int	i;
+
+	if (allocate_mutexes(input))
+		return (1);
+	i = 0;
+	while (i < input->nbr_philo)
+	{
+		if (pthread_mutex_init(&input->last_meal_time_locks[i], NULL)
+			|| pthread_mutex_init(&input->forks[i], NULL)
+			|| pthread_mutex_init(&input->meal_locks[i], NULL)
+			|| pthread_mutex_init(&input->meals_eaten_locks[i], NULL))
+			return (1);
+		i++;
+	}
+	if (pthread_mutex_init(&input->print_lock, NULL)
+		|| pthread_mutex_init(&input->death_lock, NULL))
+		return (1);
+	return (0);
+}
 
 int	init_philosophers(t_input *input)
 {
-	int	i;
+	int		i;
+	t_philo	*philo;
 
 	input->philos = malloc(sizeof(t_philo) * input->nbr_philo);
 	if (!input->philos)
@@ -58,7 +61,7 @@ int	init_philosophers(t_input *input)
 	i = 0;
 	while (i < input->nbr_philo)
 	{
-		t_philo *philo = &input->philos[i];
+		philo = &input->philos[i];
 		philo->id = i + 1;
 		philo->input = input;
 		philo->meals_eaten = 0;
@@ -72,4 +75,3 @@ int	init_philosophers(t_input *input)
 	}
 	return (0);
 }
-
