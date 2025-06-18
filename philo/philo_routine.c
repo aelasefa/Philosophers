@@ -27,9 +27,6 @@ void	print_action(t_philo *philo, char *action)
 
 void	handle_one_philosopher(t_philo *philo)
 {
-	long	start_time;
-
-	start_time = get_time();
 	print_action(philo, "has taken a fork");
 	ft_sleep(philo->input->die_time * 1000, philo);
 }

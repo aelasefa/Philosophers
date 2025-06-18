@@ -14,12 +14,7 @@
 
 static int	check_and_handle_death(t_input *input, t_philo *philo)
 {
-	int	is_checking;
-
-	pthread_mutex_lock(philo->meal_lock);
-	is_checking = philo->check;
-	pthread_mutex_unlock(philo->meal_lock);
-	if (!is_checking && philo_died(philo))
+	if (philo_died(philo))
 	{
 		pthread_mutex_lock(&input->death_lock);
 		input->is_dead = 1;
